@@ -5,9 +5,11 @@ import { ReactComponent as PersonIcon } from '../../images/icon-person.svg'
 
 
 
-function ToStyleInnerInput({value, className, onChange, type}) {
-    return <input value={value} onChange={(e) => onChange(e.target.value)} className={className}/>
+function ToStyleInnerInput({value, className, onChange, type, onBlur}) {
+    return <input value={value} onChange={(e) => onChange(e.target.value)} className={className} onBlur={() => onBlur()}/>
 }
+
+
 
 const InnerInput = styled(ToStyleInnerInput)`
     flex: 1;
@@ -19,8 +21,9 @@ const InnerInput = styled(ToStyleInnerInput)`
     font-family: ${props => props.theme.font};
     text-align: right;
     min-width: 10px;
+    
     &:focus {
-        outline: none;
+        outline: none; 
     }
 
 
@@ -28,22 +31,22 @@ const InnerInput = styled(ToStyleInnerInput)`
 `
 
 
-function ToStyleInput({className, value, onChange, type, to}) {
+function ToStyleInput({className, value, onChange, type, to, onBlur, isNotValid}) {
 
     if(to === 'person') {
         return (
-            <div className={className}>
+            <div className={`${className} ${isNotValid && 'has-error'}`}>
                 <PersonIcon />
-                <InnerInput type={type} value={value} onChange={onChange}/>
+                <InnerInput type={type} value={value} onChange={onChange} onBlur={onBlur}/>
             </div>
             
         )
     }
 
     return (
-        <div className={className}>
+        <div className={`${className} ${isNotValid && 'has-error'}`}>
             <DollarIcon />
-            <InnerInput type={type} value={value} onChange={onChange}/>
+            <InnerInput type={type} value={value} onChange={onChange} onBlur={onBlur}/>
         </div>
         
     )
@@ -55,5 +58,6 @@ export const Input = styled(ToStyleInput)`
     background-color: ${props => props.theme.secondGrayishBaseColor};
     padding: .7rem 1.5rem;
     border-radius: 10px;
+    border: 1px solid transparent;
 
 `

@@ -6,6 +6,7 @@ function ToStyleAreaTitle({className, children}) {
 }
 
 export const AreaTitle = styled(ToStyleAreaTitle)`
+    display: flex;
     color: ${props => props.theme.darkGrayishBaseColor};
     font-weight: bold;
 `

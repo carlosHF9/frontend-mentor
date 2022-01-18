@@ -1,6 +1,10 @@
 import styled from "styled-components";
 
-function ToStyleAmount({children, className, to, total}) {
+function ToStyleAmount({children, className, to, value}) {
+
+    const processedNumber = value.toFixed(2)
+    console.log(processedNumber)
+    
 
 
     if(to === 'total') {
@@ -10,7 +14,7 @@ function ToStyleAmount({children, className, to, total}) {
                     <span className="tip-amount">Total</span>
                     <span className="amount-per-person">/ Person</span>
                 </div>
-                <h2 className="amount">{total ? total : 'Total'}</h2>
+                <h2 className="amount">${value ? processedNumber : 0}</h2>
             </div>
         )
     }
@@ -21,7 +25,7 @@ function ToStyleAmount({children, className, to, total}) {
                 <span className="tip-amount">Tip Amount</span>
                 <span className="amount-per-person">/ Person</span>
             </div>
-            <h2 className="amount">{total ? total : 'Total'}</h2>
+            <h2 className="amount">${value ? processedNumber : 0}</h2>
         </div>
     )
 }

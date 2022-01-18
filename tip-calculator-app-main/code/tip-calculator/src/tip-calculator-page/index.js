@@ -2,19 +2,25 @@ import { Container } from "./components/container"
 import { CalculatorContainer } from './components/calculator-container';
 import { AreaTitle } from './components/area-title';
 import { Input } from './components/tip-input';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Session } from './components/session';
 import { Tip } from "./components/tip";
 import { Amount } from './components/amount';
 import { ResetButton } from './components/reset-button';
+import { CustomTipInput } from './components/custom-tip-input';
+import { ErrorMessage } from './components/error-message';
 
 
 
 
 export default function TipCalculator() {
 
+    
+
     const [ bill, setBill ] = useState(0)
-    const [numberOfPeople, setNumberOfPeople] = useState(0)
+    const [numberOfPeople, setNumberOfPeople] = useState(1)
+    const [billTouched, setBillTouched] = useState(false)
+    const [peopleTouched, setPeopleTouched] = useState(false)
 
     const [baseTips, setBaseTips] = useState([
         5,
@@ -24,27 +30,85 @@ export default function TipCalculator() {
         50
     ])
 
+    
+
     const [selectedTip, setSelectedTip] = useState(90)
 
     const [ totalTipPerPerson, setTotalTipPerPerson ] = useState(0)
     const [ totalPerPerson, setTotalPerPerson] = useState(0)
 
 
+    function CalculateTip() {
 
+        if(selectedTip && numberOfPeople && bill) {
+            let total = (bill + bill * (selectedTip/100))/numberOfPeople
+            let totalTip = ((bill + bill * (selectedTip/100)) - bill) / numberOfPeople
+
+            setTotalTipPerPerson(totalTip)
+            setTotalPerPerson(total)
+
+        }
+    }
     
+
+    function handleBill(inputValue) {
+
+        const value = parseInt(inputValue)
+        if(inputValue && typeof value === 'number') {
+            setBill(value)
+        }
+
+        if(!inputValue) {
+            setBill(0)
+        }
+        
+
+    }
+
+    function handleNumberPeople(inputValue) {
+        const value = parseInt(inputValue)
+        
+        if(inputValue && typeof value === 'number') {
+            setNumberOfPeople(value)
+        }
+        
+        if(!inputValue) {
+            setNumberOfPeople(0)
+        }
+    }
+
+    function ResetTipCalculator() {
+        setBill(0)
+        setNumberOfPeople(0)
+        setSelectedTip(0)
+        setTotalTipPerPerson(0)
+        setTotalPerPerson(0)
+    }
+
+    function billsIsTouched() {
+        setBillTouched(true)
+    }
+
+    function IsValidPeople() {
+        setPeopleTouched(true)
+
+    }
+
+    useEffect(() => {
+        CalculateTip()
+    }, [bill, numberOfPeople, selectedTip])
 
     return (
         <Container>
             <CalculatorContainer>
                 <Session style={{gap: '20px'}}>
-        
                     <Session style={{ gap: '10px'}}>
                         <AreaTitle>Bill</AreaTitle>
-                        <Input value={bill} onChange={setBill} />
+                        <Input value={bill} onChange={handleBill} onBlur={() => billsIsTouched()}/>
                     </Session>
                     <Session style={{gap: '10px'}}>
                         <AreaTitle>Select tip %</AreaTitle>
-                        {selectedTip}
+                
                         <Session style={{
                             flexDirection: 'row',
                             flexWrap: 'wrap',
@@ -58,13 +122,18 @@ export default function TipCalculator() {
                                         backgroundColor: 'var(--strong-cyan)',
                                         color: 'var(--very-dark-cyan)'
                                     }}>{tip}%</Tip>
+                                   
                                 ))
+                                
+                            }
+                            {
+                                    <CustomTipInput placeholder="custom" value="" />
                             }
                         </Session>
                     </Session>
                     <Session style={{ gap: '10px'}}>
-                        <AreaTitle>Number of People</AreaTitle>
-                        <Input value={numberOfPeople} onChange={setNumberOfPeople} to="person" />
+                        <AreaTitle><span>Number of People</span> {numberOfPeople === 0 && peopleTouched ? <ErrorMessage style={{marginLeft: 'auto'}}>Can't be zero</ErrorMessage> : ''}</AreaTitle>
+                        <Input isNotValid={numberOfPeople === 0 && peopleTouched} value={numberOfPeople} onChange={handleNumberPeople} to="person" onBlur={() => setPeopleTouched(true)}/>
                     </Session>
                 </Session>
                 <Session style={{
@@ -73,10 +142,11 @@ export default function TipCalculator() {
 
                     padding: '2rem 1.5rem 0 1.5rem'
                 }}>
-                    <Amount />
-                    <Amount to="total" />
+                    <Amount value={totalTipPerPerson}/>
+                    <Amount value={totalPerPerson} to="total" />
                     
-                    <ResetButton onClick={() => console.log('work')}>Reset</ResetButton>
+                    <ResetButton onClick={() => ResetTipCalculator()}>Reset</ResetButton>
+                    
 
                 </Session>
                 

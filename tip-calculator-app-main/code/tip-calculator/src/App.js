@@ -1,7 +1,8 @@
 import logo from './logo.svg';
 import './App.css';
-import { ThemeProvider } from 'styled-components'
+import styled, { ThemeProvider } from 'styled-components'
 import TipCalculator from './tip-calculator-page/index';
+
 
 
 // :root {
@@ -23,16 +24,29 @@ const theme = {
   lightGrayishBaseColor: 'hsl(185, 41%, 84%)',
   secondGrayishBaseColor: 'hsl(189, 41%, 97%)',
   white: 'hsl(0, 0%, 100%)',
-  font: "'Space Mono', monospace"
+  font: "'Space Mono', monospace",
+  errorColor: "#c97e6b"
+
+
 }
 
+
+const AppContainer = styled.div`
+  background-color: ${props => props.theme.veryDarkBaseColor};
+
+
+  .has-error {
+    border: 1px solid ${props => props.theme.errorColor};
+  }
+
+`
 
 function App() {
   return (
     <ThemeProvider theme={theme}>
-      <div className="App">
+      <AppContainer className="App">
         <TipCalculator />
-      </div>
+      </AppContainer>
     </ThemeProvider>
     
   );
