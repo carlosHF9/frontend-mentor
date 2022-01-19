@@ -55,7 +55,8 @@ export const Amount = styled(ToStyleAmount)`
 
     & > .amount {
         
-        color: ${props => props.theme.strongBaseColor}
+        color: ${props => props.theme.strongBaseColor};
+        font-size: 40px;
     }
 
 

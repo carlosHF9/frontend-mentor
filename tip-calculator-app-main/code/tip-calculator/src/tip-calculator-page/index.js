@@ -32,11 +32,28 @@ export default function TipCalculator() {
 
     
 
-    const [selectedTip, setSelectedTip] = useState(90)
+    const [selectedTip, setSelectedTip] = useState('')
+    const [customTip, setCustomTip] = useState('')
 
     const [ totalTipPerPerson, setTotalTipPerPerson ] = useState(0)
     const [ totalPerPerson, setTotalPerPerson] = useState(0)
 
+
+    function HandleCustomTipChange(inputValue) {
+
+        const value = parseInt(inputValue)
+        if(inputValue && typeof value === 'number') {
+            setCustomTip(value)
+            setSelectedTip(value)
+        }
+
+        if(!inputValue) {
+            setCustomTip('')
+            setSelectedTip('')
+        }
+
+        
+    }
 
     function CalculateTip() {
 
@@ -83,6 +100,7 @@ export default function TipCalculator() {
         setSelectedTip(0)
         setTotalTipPerPerson(0)
         setTotalPerPerson(0)
+        setCustomTip('')
     }
 
     function billsIsTouched() {
@@ -116,7 +134,10 @@ export default function TipCalculator() {
                         }}>
                             {
                                 baseTips.map( tip => (
-                                    tip !== selectedTip ? <Tip onClick={() => setSelectedTip(tip)}>{tip}%</Tip>
+                                    tip !== selectedTip || customTip ? <Tip onClick={() => {
+                                        setSelectedTip(tip)
+                                        setCustomTip('')
+                                    }}>{tip}%</Tip>
                                         :
                                     <Tip onClick={() => setSelectedTip(tip)} style={{
                                         backgroundColor: 'var(--strong-cyan)',
@@ -127,7 +148,7 @@ export default function TipCalculator() {
                                 
                             }
                             {
-                                    <CustomTipInput placeholder="custom" value="" />
+                                    <CustomTipInput placeholder="Custom" value={customTip} onChange={(e) => HandleCustomTipChange(e.target.value)} />
                             }
                         </Session>
                     </Session>

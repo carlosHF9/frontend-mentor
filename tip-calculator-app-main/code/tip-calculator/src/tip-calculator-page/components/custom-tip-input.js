@@ -9,8 +9,10 @@ export const CustomTipInput = styled.input`
     margin: 0;
     padding: 0;
     border: 1px solid white;
+    color: ${props => props.theme.darkGrayishBaseColor};
     background-color: ${props => props.theme.secondGrayishBaseColor};
     text-align: center;
+    
 
 
     &:focus {
